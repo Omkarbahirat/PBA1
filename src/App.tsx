@@ -20,7 +20,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 // --- Types ---
-type Section = 'data' | 'model' | 'backend' | 'infra' | 'mlops' | 'devops' | 'output';
+type Section = 'data' | 'model' | 'backend' | 'infra' | 'mlops' | 'devops' | 'output' | 'prompts';
 
 interface Responsibility {
   role: string;
@@ -55,20 +55,40 @@ export default function App() {
 
   const responsibilities: Responsibility[] = [
     {
-      role: "Backend Engineer",
-      tasks: ["REST API implementation", "Auth/RBAC logic", "Async job queue (Redis/Celery)", "Logging & Monitoring"]
+      role: "Backend Developer",
+      tasks: [
+        "Implement REST API endpoints (/upload, /predict, /train)",
+        "Manage CSV-based dataset storage and versioning",
+        "Integrate SQLite/Postgres for metadata tracking",
+        "Handle authentication and role-based access control"
+      ]
     },
     {
-      role: "Data Engineer",
-      tasks: ["CSV Ingestion pipeline", "Data validation (Great Expectations)", "Schema evolution", "Feature Store management"]
+      role: "DL & Transformer (Train/Test)",
+      tasks: [
+        "Design unified training and evaluation pipelines",
+        "Implement testing suites for model accuracy and robustness",
+        "Manage training/validation/test splits for all models",
+        "Compare metrics (RMSE vs F1) across LSTM and Transformers"
+      ]
     },
     {
-      role: "Deep Learning Engineer (LSTM)",
-      tasks: ["Time-series preprocessing", "LSTM architecture design", "Sequence length optimization", "Temporal drift analysis"]
+      role: "LSTM Specialist",
+      tasks: [
+        "Build sequential data preprocessing for time-series",
+        "Optimize LSTM cell architectures (Hidden layers, Dropout)",
+        "Handle long-term dependency challenges (Vanishing gradients)",
+        "Fine-tune temporal sequence lengths for specific datasets"
+      ]
     },
     {
-      role: "Transformer / NLP Engineer",
-      tasks: ["Tokenization strategy", "Attention mechanism tuning", "Context window management", "Fine-tuning LLMs"]
+      role: "Transformer Specialist",
+      tasks: [
+        "Implement Multi-Head Attention and Positional Encoding",
+        "Manage tokenization and vocabulary for NLP tasks",
+        "Optimize context window and memory efficiency",
+        "Fine-tune pre-trained Transformer models for specific domains"
+      ]
     }
   ];
 
@@ -458,6 +478,79 @@ export default function App() {
             </div>
           </motion.div>
         );
+      case 'prompts':
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            <Card>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Terminal className="w-5 h-5 text-blue-600" />
+                Google AI Studio Prompts
+              </h3>
+              <p className="text-sm text-zinc-600 mb-6">
+                Use these prompts in Google AI Studio to generate code for each specific role in the architecture.
+              </p>
+              
+              <div className="space-y-6">
+                <div className="p-4 bg-zinc-50 rounded-lg border border-zinc-200">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-xs font-bold text-zinc-900 uppercase">For Backend Developer</h4>
+                    <Badge color="zinc">API & CSV</Badge>
+                  </div>
+                  <code className="text-[11px] text-zinc-700 block whitespace-pre-wrap leading-relaxed">
+{`Act as a Senior Backend Engineer. Write a Node.js/Express API that:
+1. Accepts CSV file uploads and saves them to a 'datasets' directory.
+2. Implements a '/train' endpoint that triggers an async job.
+3. Implements a '/predict' endpoint that loads a saved model.
+4. Uses JWT for authentication and includes basic error handling.
+Ensure the CSV ingestion validates columns: [timestamp, feature_a, feature_b, label].`}
+                  </code>
+                </div>
+
+                <div className="p-4 bg-zinc-50 rounded-lg border border-zinc-200">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-xs font-bold text-zinc-900 uppercase">For DL & Transformer (Train/Test)</h4>
+                    <Badge color="zinc">Pipeline</Badge>
+                  </div>
+                  <code className="text-[11px] text-zinc-700 block whitespace-pre-wrap leading-relaxed">
+{`Act as a Machine Learning Engineer. Write a Python script using PyTorch/TensorFlow to:
+1. Load a CSV dataset and split it into 80% train, 10% val, 10% test.
+2. Create a generic training loop that handles both LSTM and Transformer models.
+3. Calculate evaluation metrics: RMSE for regression and F1-score for classification.
+4. Save the best model weights as a .pth or .h5 file.`}
+                  </code>
+                </div>
+
+                <div className="p-4 bg-zinc-50 rounded-lg border border-zinc-200">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-xs font-bold text-zinc-900 uppercase">For LSTM Specialist</h4>
+                    <Badge color="zinc">Sequential</Badge>
+                  </div>
+                  <code className="text-[11px] text-zinc-700 block whitespace-pre-wrap leading-relaxed">
+{`Act as a Deep Learning Specialist. Implement a PyTorch LSTM model for time-series prediction:
+1. Define a class 'TimeSeriesLSTM' with 2 hidden layers and dropout.
+2. Include a method to preprocess CSV data into sliding window sequences.
+3. Optimize for long-term dependencies in a dataset with 50+ time steps.
+4. Explain the choice of hidden dimension and layer count.`}
+                  </code>
+                </div>
+
+                <div className="p-4 bg-zinc-50 rounded-lg border border-zinc-200">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-xs font-bold text-zinc-900 uppercase">For Transformer Specialist</h4>
+                    <Badge color="zinc">Attention</Badge>
+                  </div>
+                  <code className="text-[11px] text-zinc-700 block whitespace-pre-wrap leading-relaxed">
+{`Act as an NLP Engineer. Implement a Transformer model for contextual learning:
+1. Define a 'ContextualTransformer' using Multi-Head Attention.
+2. Include Positional Encoding for the input sequence.
+3. Write a tokenization function that prepares CSV text features for the model.
+4. Optimize the attention heads and feed-forward dimension for a context window of 512 tokens.`}
+                  </code>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        );
       default:
         return null;
     }
@@ -499,6 +592,7 @@ export default function App() {
               { id: 'infra', label: 'Infrastructure', icon: <Cloud className="w-4 h-4" /> },
               { id: 'mlops', label: 'MLOps Pipeline', icon: <BarChart3 className="w-4 h-4" /> },
               { id: 'devops', label: 'DevOps Pipeline', icon: <GitBranch className="w-4 h-4" /> },
+              { id: 'prompts', label: 'AI Studio Prompts', icon: <Terminal className="w-4 h-4" /> },
               { id: 'output', label: 'Architectural Output', icon: <Layers className="w-4 h-4" /> },
             ].map((item) => (
               <button
